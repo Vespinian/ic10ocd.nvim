@@ -126,6 +126,9 @@ M.get_ic10_code_to_buffer = function()
 		return
 	end
 	local lines = get_ic10_code(M.selected_ic10.refid)
+	for idx, line in pairs(lines) do
+		lines[idx] = string.gsub(line, "\r", "")
+	end
 	vim.api.nvim_buf_set_lines(0, 0, -1, false, lines)
 end
 
@@ -135,6 +138,9 @@ M.get_ic10_code_to_file = function()
 		return
 	end
 	local lines = get_ic10_code(M.selected_ic10.refid)
+	for idx, line in pairs(lines) do
+		lines[idx] = string.gsub(line, "\r", "")
+	end
 	vim.fn.writefile(lines, M.selected_ic10.holder_name .. ".ic10")
 end
 
