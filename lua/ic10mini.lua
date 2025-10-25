@@ -116,13 +116,15 @@ M.minify_current_buf = function()
 	for idx, line in ipairs(ic10_file) do
 		local s, e
 		s, e = string.find(line, "%S")
-		local first_char = line:sub(s, e)
-		if first_char == "#" then
-			table.insert(lines_to_remove, idx)
-		else
-			s, e = string.find(line, "#")
-			if s ~= nil then
-				ic10_file[idx] = string.sub(line, 1, s - 1)
+		if s ~= nil then
+			local first_char = line:sub(s, e)
+			if first_char == "#" then
+				table.insert(lines_to_remove, idx)
+			else
+				s, e = string.find(line, "#")
+				if s ~= nil then
+					ic10_file[idx] = string.sub(line, 1, s - 1)
+				end
 			end
 		end
 	end

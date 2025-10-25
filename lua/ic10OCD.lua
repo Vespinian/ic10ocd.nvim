@@ -9,6 +9,7 @@ local M = {
 	---@field on boolean
 	selected_ic10 = nil,
 	cached_list = nil,
+	server_address = "localhost:8000",
 }
 
 local pickers = require("telescope.pickers")
@@ -53,7 +54,7 @@ end
 
 local function get_chip_info_from_game(refid)
 	local curl = require("plenary.curl")
-	local res = curl.get("localhost:8000/chip-info/" .. refid, {
+	local res = curl.get(M.server_address .. "/chip-info/" .. refid, {
 		accept = "application/json",
 		timeout = 1000,
 	})
@@ -62,7 +63,7 @@ end
 
 local function get_code_from_game(refid)
 	local curl = require("plenary.curl")
-	local res = curl.get("localhost:8000/chip-code/" .. refid, {
+	local res = curl.get(M.server_address .. "/chip-code/" .. refid, {
 		accept = "application/json",
 		timeout = 1000,
 	})
@@ -71,7 +72,7 @@ end
 
 local function post_code_to_game(refid, code)
 	local curl = require("plenary.curl")
-	local res = curl.post("localhost:8000/chip-code/" .. refid, {
+	local res = curl.post(M.server_address .. "/chip-code/" .. refid, {
 		headers = { content_type = "application/json" },
 		body = vim.fn.json_encode({ code = table.concat(code, "\n") }),
 		timeout = 1000,
@@ -81,7 +82,7 @@ end
 
 local function get_chip_dump(refid)
 	local curl = require("plenary.curl")
-	local res = curl.get("localhost:8000/chip-dump/" .. refid, {
+	local res = curl.get(M.server_address .. "/chip-dump/" .. refid, {
 		accept = "application/json",
 		timeout = 1000,
 	})
@@ -90,7 +91,7 @@ end
 
 local get_connected_devices = function(refid)
 	local curl = require("plenary.curl")
-	local res = curl.get("localhost:8000/chip-network-device-list/" .. refid, {
+	local res = curl.get(M.server_address .. "/chip-network-device-list/" .. refid, {
 		accept = "application/json",
 		timeout = 1000,
 	})
@@ -99,7 +100,7 @@ end
 
 local get_ic10_list = function()
 	local curl = require("plenary.curl")
-	local result, res = pcall(curl.get, "localhost:8000/list-chips", {
+	local result, res = pcall(curl.get, M.server_address .. "/list-chips", {
 		accept = "application/json",
 		timeout = 1000,
 	})
@@ -200,7 +201,7 @@ M.selected_toggle_onoff = function()
 		return
 	end
 	local curl = require("plenary.curl")
-	local res = curl.post("localhost:8000/toggle-chip-power/" .. M.selected_ic10.refid, {
+	local res = curl.post(M.server_address .. "/toggle-chip-power/" .. M.selected_ic10.refid, {
 		body = "",
 		timeout = 1000,
 	})
@@ -303,7 +304,7 @@ M.post_json_to_chip_mem = function()
 	local json_decoded = vim.fn.json_decode(json_buf)
 	-- print(vim.inspect(json_decoded))
 	local curl = require("plenary.curl")
-	local res = curl.post("localhost:8000/chip-mem-slices/" .. M.selected_ic10.refid, {
+	local res = curl.post(M.server_address .. "/chip-mem-slices/" .. M.selected_ic10.refid, {
 		headers = { content_type = "application/json" },
 		body = vim.fn.json_encode(json_decoded),
 		timeout = 1000,
